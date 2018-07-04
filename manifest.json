@@ -1,0 +1,11 @@
+{
+   "name":"devtools-diff",
+   "version":"0.1",
+   "manifest_version": 2,
+
+   "default_locale": "en",
+   "description":"TODO",
+   "permissions":[],
+
+   "devtools_page": "difftools.html"
+}
