@@ -8,6 +8,7 @@ var diffLastTwoInspected = function() {
     let firstStyleKeys = Object.getOwnPropertyNames(firstStyle);
     let secondStyleKeys = Object.getOwnPropertyNames(secondStyle);
 
+    let ret = {};
     let diff = [];
 
     for (let i = 0; i < firstStyleKeys.length; i++) {
@@ -19,7 +20,7 @@ var diffLastTwoInspected = function() {
             'second': secondStyle[firstStyleKeys[i]]
           });
         }
-      } else {
+      } else if (firstStyle[firstStyleKeys[i]] != ""){
         diff.push({
           'property': firstStyleKeys[i],
           'first': firstStyle[firstStyleKeys[i]],
@@ -28,16 +29,10 @@ var diffLastTwoInspected = function() {
       }
     }
 
+    // When looking through the second set of keys, to be correct we should
+    // only push diffs that weren't in the first set
     for (let i = 0; i < secondStyleKeys.length; i++) {
-      if (firstStyle.hasOwnProperty(secondStyleKeys[i])) {
-        if (secondStyle[secondStyleKeys[i]] != firstStyle[secondStyleKeys[i]]) {
-          diff.push({
-            'property': secondStyleKeys[i],
-            'first': firstStyle[secondStyleKeys[i]],
-            'second': secondStyle[secondStyleKeys[i]]
-          });
-        }
-      } else {
+      if (secondStyle[secondStyleKeys[i]] != "") {
         diff.push({
           'property': firstStyleKeys[i],
           'first': null,
@@ -46,7 +41,11 @@ var diffLastTwoInspected = function() {
       }
     }
 
-    return diff;
+    ret.diff = diff;
+    ret.first = firstStyle;
+    ret.second = secondStyle;
+
+    return ret;
   }
 
   // If there haven't yet been two, just returns a result saying so
