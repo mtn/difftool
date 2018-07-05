@@ -1,6 +1,5 @@
 
-// A function to diff the styles applied to the last two inspected elements.
-// If there haven't yet been two, just returns a result saying so.
+// diffs the styles applied to the last two inspected elements
 var diffLastTwoInspected = function() {
   if (typeof $0 != 'undefined' && typeof $1 != 'undefined') {
     let firstStyle = ($0).style;
@@ -9,17 +8,49 @@ var diffLastTwoInspected = function() {
     let firstStyleKeys = Object.getOwnPropertyNames(firstStyle);
     let secondStyleKeys = Object.getOwnPropertyNames(secondStyle);
 
-    for (let i = 0; i < firstStyleKeys.length; i++) {
-      if secondStyle.hasOwnProperty(firstStyleKeys[i]) {
+    let diff = [];
 
+    for (let i = 0; i < firstStyleKeys.length; i++) {
+      if (secondStyle.hasOwnProperty(firstStyleKeys[i])) {
+        if (secondStyle[firstStyleKeys[i]] != firstStyle[firstStyleKeys[i]]) {
+          diff.push({
+            'property': firstStyleKeys[i],
+            'first': firstStyle[firstStyleKeys[i]],
+            'second': secondStyle[firstStyleKeys[i]]
+          });
+        }
       } else {
-        // if it didn't have themthey are definitely different
+        diff.push({
+          'property': firstStyleKeys[i],
+          'first': firstStyle[firstStyleKeys[i]],
+          'second': null
+        });
       }
     }
-    return { first: ($0).style, second: ($1).style, firstprops: props };
-  } else {
-    return { status : 'Select another element to view style diff' };
+
+    for (let i = 0; i < secondStyleKeys.length; i++) {
+      if (firstStyle.hasOwnProperty(secondStyleKeys[i])) {
+        if (secondStyle[secondStyleKeys[i]] != firstStyle[secondStyleKeys[i]]) {
+          diff.push({
+            'property': secondStyleKeys[i],
+            'first': firstStyle[secondStyleKeys[i]],
+            'second': secondStyle[secondStyleKeys[i]]
+          });
+        }
+      } else {
+        diff.push({
+          'property': firstStyleKeys[i],
+          'first': null,
+          'second': secondStyle[secondStyleKeys[i]]
+        });
+      }
+    }
+
+    return diff;
   }
+
+  // If there haven't yet been two, just returns a result saying so
+  return { status : 'Select another element to view style diff' };
 };
 
 chrome.devtools.panels.elements.createSidebarPane("difftool",
