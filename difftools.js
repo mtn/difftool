@@ -2,48 +2,51 @@
 // diffs the styles applied to the last two inspected elements
 var diffLastTwoInspected = function() {
   if (typeof $0 != 'undefined' && typeof $1 != 'undefined') {
-    let firstStyle = ($0).style;
-    let secondStyle = ($1).style;
-
-    let firstStyleKeys = Object.getOwnPropertyNames(firstStyle);
-    let secondStyleKeys = Object.getOwnPropertyNames(secondStyle);
+    let firstStyle = window.getComputedStyle($0);
+    let secondStyle = window.getComputedStyle($1);
 
     let ret = {};
     let diff = [];
 
-    for (let i = 0; i < firstStyleKeys.length; i++) {
-      if (secondStyle.hasOwnProperty(firstStyleKeys[i])) {
-        if (secondStyle[firstStyleKeys[i]] != firstStyle[firstStyleKeys[i]]) {
+    for (let i = 0; i < firstStyle.length; i++) {
+      let firstVal = firstStyle.getPropertyValue(firstStyle[i]);
+
+      if (secondStyle.hasOwnProperty(firstStyle[i])) {
+        let secondVal = secondStyle.getPropertyValue(firstStyle[i]);
+
+        if (secondVal != firstVal) {
           diff.push({
-            'property': firstStyleKeys[i],
-            'first': firstStyle[firstStyleKeys[i]],
-            'second': secondStyle[firstStyleKeys[i]]
+            'property': firstStyle[i],
+            'first': firstVal,
+            'second': secondVal
           });
         }
-      } else if (firstStyle[firstStyleKeys[i]] != ""){
+      } else if (firstVal != "" && firstVal != null){
         diff.push({
-          'property': firstStyleKeys[i],
-          'first': firstStyle[firstStyleKeys[i]],
+          'property': firstStyle[i],
+          'first': firstVal,
           'second': null
         });
       }
     }
 
-    // When looking through the second set of keys, to be correct we should
+    // When looking through the second set, to be correct we should
     // only push diffs that weren't in the first set
-    for (let i = 0; i < secondStyleKeys.length; i++) {
-      if (secondStyle[secondStyleKeys[i]] != "") {
+    for (let i = 0; i < secondStyle.length; i++) {
+      let secondVal = secondStyle.getPropertyValue(secondStyle[i]);
+
+      if (!firstStyle.hasOwnProperty(secondStyle[i]) && secondVal != "" && secondVal != null) {
         diff.push({
-          'property': firstStyleKeys[i],
+          'property': secondStyle[i],
           'first': null,
-          'second': secondStyle[secondStyleKeys[i]]
+          'second': secondVal
         });
       }
     }
 
     ret.diff = diff;
-    ret.first = firstStyle;
-    ret.second = secondStyle;
+    ret.first = $0;
+    ret.second = $1;
 
     return ret;
   }
