@@ -11,7 +11,7 @@ Disclaimers:
 
 ## How to use it
 
-The extension is in `extension`. It's currently not published, so to try it out (in chrome), visit `chrome://extensions/`, select "Load Unpacked", and select the `extension` directory (after cloning the project). Once you load it, a new sidebar panel will appear in the developer tools, `difftool`. It won't display much before selecting anything, but once at least two elements have been "inspected" (clicked on while inspecting, from within the tools), their diff will appear. It's currently just rendered in json, and should look something like this:
+The easiest way to try it out is to add it to chrome through the web store [here](https://chrome.google.com/webstore/detail/devtools-diff/pibbgfbcdndokmmkgjhbgmgklhplblpi). Otherwise, the extension is in `extension`. Visit `chrome://extensions/`, select "Load Unpacked", and select the `extension` directory (after cloning the project). Once you load it, a new sidebar panel will appear in the developer tools, `difftool`. It won't display much before selecting anything, but once at least two elements have been "inspected" (clicked on while inspecting, from within the tools), their diff will appear. It's currently just rendered in json, and should look something like this:
 
 <img src="sample-diff.png" style="height: 200px;" />
 
